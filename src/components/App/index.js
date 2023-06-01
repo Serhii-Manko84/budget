@@ -1,6 +1,7 @@
 import { Component } from "react";
 import Balance from "../Balance";
 import Transactions from "../Transactions";
+import Form from "../Form";
 
 class App extends Component {
   constructor() {
@@ -10,26 +11,14 @@ class App extends Component {
       transactions: [],
       id: 0,
     };
-  }
-  onIncrease = () => {
-    this.setState((state) => ({
-      balance: state.balance + 1,
-      transactions: [
-        { id: state.id, label: "Increase", value: 1 },
-        ...state.transactions,
-      ],
-      id: state.id + 1,
-    }));
-  };
 
-  onDecrease = () => {
+    this.onChange = this.onChange.bind(this);
+  }
+
+  onChange = (value) => {
     this.setState((state) => ({
-      balance: state.balance - 1,
-      transactions: [
-        { id: state.id, label: "Decrease", value: -1 },
-        ...state.transactions,
-      ],
-      id: state.id + 1,
+      balance: state.balance + Number(value),
+      transactions: [{ value, label: "change" }, ...state.transactions],
     }));
   };
 
@@ -37,8 +26,7 @@ class App extends Component {
     return (
       <>
         <Balance balance={this.state.balance} />
-        <button onClick={this.onIncrease}>Додати 1</button>
-        <button onClick={this.onDecrease}>Зменьшити 1</button>
+        <Form onChange={this.onChange} />
         <hr />
         <Transactions transactions={this.state.transactions} />
       </>

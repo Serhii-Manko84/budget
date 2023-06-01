@@ -1,9 +1,5 @@
 const Balance = ({ balance }) => {
-  return (
-    <div>
-      {!balance === 0 ? "Повний нуль" : null} {balance}
-    </div>
-  );
+  return <div>Balance: {balance}</div>;
 };
 
 export default Balance;
