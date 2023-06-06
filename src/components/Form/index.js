@@ -18,7 +18,7 @@ class Form extends Component {
 
   onChange = (event) => {
     const { value } = event.target;
-    this.setState({ value });
+    this.setState({ value: +value });
   };
 
   render() {

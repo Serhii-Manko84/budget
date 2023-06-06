@@ -1,11 +1,12 @@
 import PropTypes from "prop-types";
+import { Wrapper } from "./styles";
 
-const Transaction = ({ transaction }) => {
+const Transaction = ({ transaction: { value, label } }) => {
   return (
-    <div>
-      label:{transaction.label}
-      <p>value: {transaction.value}</p>
-    </div>
+    <Wrapper value={value}>
+      label:{label}
+      <p>value: {value}</p>
+    </Wrapper>
   );
 };
 
