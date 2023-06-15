@@ -1,63 +1,53 @@
-import React, { Component } from "react";
+import React, { useState } from "react";
 import PropTypes from "prop-types";
 
 import { Wrapper, Input, Row, Button, Comment } from "./styles";
 
-class Form extends Component {
-  constructor() {
-    super();
+const Form = (props) => {
+  const [form, setForm] = useState({
+    value: "",
+    date: new Date().toISOString().substring(0, 10),
+    comment: "",
+  });
 
-    this.state = {
-      value: "",
-      date: new Date().toISOString().substring(0, 10),
-      comment: "",
-    };
-  }
-
-  onSubmit = (event) => {
+  const onSubmit = (event) => {
     event.preventDefault();
-    this.props.onChange(this.state);
-    this.setState({ value: "", comment: "" });
+    props.onChange(form);
+    setForm({ ...form, value: "", comment: "" });
   };
 
-  onChange = (event) => {
+  const onChange = (event) => {
     const { value, name } = event.target;
-    this.setState({ [name]: value });
+    setForm({ ...form, [name]: value });
   };
 
-  render() {
-    return (
-      <Wrapper>
-        <form onSubmit={this.onSubmit}>
-          <Row>
-            <Input
-              type="date"
-              name="date"
-              value={this.state.date}
-              onChange={this.onChange}
-            />
+  return (
+    <Wrapper>
+      <form onSubmit={onSubmit}>
+        <Row>
+          <Input
+            type="date"
+            name="date"
+            value={form.date}
+            onChange={onChange}
+          />
 
-            <Input
-              onChange={this.onChange}
-              value={this.state.value}
-              name="value"
-              type="number"
-              placeholder="Summa"
-            />
-          </Row>
-          <Row>
-            <Button>Save</Button>
-            <Comment
-              name="comment"
-              value={this.state.comment}
-              onChange={this.onChange}
-            />
-          </Row>
-        </form>
-      </Wrapper>
-    );
-  }
-}
+          <Input
+            value={form.value}
+            name="value"
+            type="number"
+            placeholder="Summa"
+            onChange={onChange}
+          />
+        </Row>
+        <Row>
+          <Button>Save</Button>
+          <Comment name="comment" value={form.comment} onChange={onChange} />
+        </Row>
+      </form>
+    </Wrapper>
+  );
+};
 
 Form.propTypes = {
   onChange: PropTypes.func,

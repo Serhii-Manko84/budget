@@ -1,4 +1,4 @@
-import { Component } from "react";
+import { useEffect, useState } from "react";
 
 import Balance from "../Balance";
 import Transactions from "../Transactions";
@@ -9,46 +9,42 @@ import { Wrapper } from "./styles";
 
 import { getItems, addItem } from "../../utils/indexdb";
 
-class Home extends Component {
-  constructor() {
-    super();
-    this.state = {
-      balance: 0,
-      transactions: [],
-      id: 0,
-    };
+const Home = () => {
+  const [balance, setBalance] = useState(0);
+  const [transactions, setTransactions] = useState([]);
 
-    this.onChange = this.onChange.bind(this);
-  }
-  componentDidMount() {
+  useEffect(() => {
     getItems()
-      .then((transactions) => {
-        this.setState({ transactions });
+      .then((item) => {
+        setTransactions(item);
       })
       .catch((error) => console.error(error));
-  }
+  }, [setTransactions]);
 
-  onChange = ({ value, date, comment }) => {
-    const transaction = { value: +value, comment, date, id: Date.now() };
-    this.setState((state) => ({
-      balance: state.balance + Number(value),
-      transactions: [transaction, ...state.transactions],
-    }));
+  const onChange = ({ value, date, comment }) => {
+    const transaction = {
+      value: +value,
+      comment,
+      date,
+      id: Date.now(),
+    };
+
+    setTransactions([...transactions, transaction]);
+    setBalance(balance + Number(value));
+
     addItem(transaction);
   };
 
-  render() {
-    return (
-      <ErrorBoundary>
-        <Wrapper>
-          <Balance balance={this.state.balance} />
-          <Form onChange={this.onChange} />
-          <hr />
-          <Transactions transactions={this.state.transactions} />
-        </Wrapper>
-      </ErrorBoundary>
-    );
-  }
-}
+  return (
+    <ErrorBoundary>
+      <Wrapper>
+        <Balance balance={balance} />
+        <Form onChange={onChange} />
+        <hr />
+        <Transactions transactions={transactions} />
+      </Wrapper>
+    </ErrorBoundary>
+  );
+};
 
 export default Home;
