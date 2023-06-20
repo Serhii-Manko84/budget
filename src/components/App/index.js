@@ -7,6 +7,7 @@ import { open } from "../../utils/indexdb";
 import Home from "../Home";
 import About from "../About/";
 import Statistics from "../Statistics";
+import Settings from "../Settings";
 import Header from "../Header";
 
 import { Wrapper, GlobalStyle } from "./styles";
@@ -44,6 +45,7 @@ class App extends Component {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/statistics" element={<Statistics />} />
+            <Route path="/settings" element={<Settings />} />
             <Route path="/about" element={<About />} />
           </Routes>
         </Wrapper>
