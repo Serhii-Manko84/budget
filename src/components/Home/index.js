@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import Balance from "../Balance";
 import Transactions from "../Transactions";
@@ -35,13 +35,34 @@ const Home = () => {
     addItem(transaction);
   };
 
+  const onDelete = useCallback(
+    (id) => {
+      setTransactions((transactions) =>
+        transactions.filter((item) => item.id !== id)
+      );
+    },
+    [setTransactions]
+  );
+
+  const onStartClick = useCallback((id) => {
+    setTransactions((transactions) =>
+      transactions.map((item) =>
+        item.id !== id ? item : { ...item, isChecked: !item.isChecked }
+      )
+    );
+  });
+
   return (
     <ErrorBoundary>
       <Wrapper>
         <Balance balance={balance} />
         <Form onChange={onChange} />
         <hr />
-        <Transactions transactions={transactions} />
+        <Transactions
+          transactions={transactions}
+          onDelete={onDelete}
+          onStartClick={onStartClick}
+        />
       </Wrapper>
     </ErrorBoundary>
   );
