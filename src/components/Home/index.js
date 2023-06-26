@@ -1,4 +1,5 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
+import { Bars } from "react-loader-spinner";
 
 import Balance from "../Balance";
 import Transactions from "../Transactions";
@@ -7,50 +8,18 @@ import ErrorBoundary from "../ErrorBoundary";
 
 import { Wrapper } from "./styles";
 
-import { getItems, addItem } from "../../utils/indexdb";
+import { useDate } from "../hooks";
+import { STATUSESS } from "../../constants";
 
 const Home = () => {
   const [balance, setBalance] = useState(0);
-  const [transactions, setTransactions] = useState([]);
+  const { transactions, status, pushTransaction, onDelete, onStartClick } =
+    useDate();
 
-  useEffect(() => {
-    getItems()
-      .then((item) => {
-        setTransactions(item);
-      })
-      .catch((error) => console.error(error));
-  }, [setTransactions]);
-
-  const onChange = ({ value, date, comment }) => {
-    const transaction = {
-      value: +value,
-      comment,
-      date,
-      id: Date.now(),
-    };
-
-    setTransactions([...transactions, transaction]);
-    setBalance(balance + Number(value));
-
-    addItem(transaction);
+  const onChange = (transaction) => {
+    pushTransaction(transaction);
+    setBalance(balance + Number(transaction.value));
   };
-
-  const onDelete = useCallback(
-    (id) => {
-      setTransactions((transactions) =>
-        transactions.filter((item) => item.id !== id)
-      );
-    },
-    [setTransactions]
-  );
-
-  const onStartClick = useCallback((id) => {
-    setTransactions((transactions) =>
-      transactions.map((item) =>
-        item.id !== id ? item : { ...item, isChecked: !item.isChecked }
-      )
-    );
-  });
 
   return (
     <ErrorBoundary>
@@ -58,11 +27,18 @@ const Home = () => {
         <Balance balance={balance} />
         <Form onChange={onChange} />
         <hr />
-        <Transactions
-          transactions={transactions}
-          onDelete={onDelete}
-          onStartClick={onStartClick}
-        />
+        {status === STATUSESS.PENDING ? (
+          <div>
+            <Bars styles="width:50px; height: 50px;" />
+          </div>
+        ) : null}
+        {status === STATUSESS.SUCCESS ? (
+          <Transactions
+            transactions={transactions}
+            onDelete={onDelete}
+            onStartClick={onStartClick}
+          />
+        ) : null}
       </Wrapper>
     </ErrorBoundary>
   );

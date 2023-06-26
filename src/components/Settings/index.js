@@ -1,8 +1,10 @@
 import { useContext } from "react";
+import { useBoolenToggle } from "../hooks";
 import { AppContext } from "../providers/context";
 
 const Settings = () => {
   const { state, dispatch } = useContext(AppContext);
+  const { status, handleStatusChange } = useBoolenToggle();
 
   const onChange = (event) => {
     const { value } = event.target;
@@ -25,6 +27,15 @@ const Settings = () => {
             </select>
           </label>
         </form>
+      </div>
+      <div>
+        <button onClick={handleStatusChange}>Add Settings</button>
+        {status ? (
+          <div>
+            <h2> Add Settings</h2>
+            <p>...</p>
+          </div>
+        ) : null}
       </div>
     </>
   );
