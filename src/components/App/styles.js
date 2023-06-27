@@ -8,6 +8,6 @@ margin: 0;
 `;
 
 export const Wrapper = styled.div`
-  background: #f2f2f2;
   padding: 10px;
+  background: ${(props) => props.theme.background};
 `;

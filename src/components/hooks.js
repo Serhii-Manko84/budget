@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { STATUSESS } from "../constants";
-import { addItem, getItems } from "../utils/indexdb";
+import { getData, addItem, deleteItem, updateItem } from "../utils/indexdb";
 
 export const useBoolenToggle = () => {
   const [status, setStatus] = useState(false);
@@ -27,7 +27,7 @@ export const useDate = () => {
       ...state,
       status: STATUSESS.PENDING,
     });
-    getItems()
+    getData(0, 20)
       .then((transactions) => {
         setState({
           ...state,
@@ -44,6 +44,28 @@ export const useDate = () => {
         })
       );
   }, []);
+
+  const loadMoreRows = useCallback(() => {
+    setState({
+      ...state,
+      status: STATUSESS.PENDING,
+    });
+
+    getData(state.transactions.length, 20)
+      .then((transactions) => {
+        setState({
+          ...state,
+          transactions: [...state.transactions, ...transactions],
+          status: STATUSESS.SUCCESS,
+        });
+      })
+      .catch(() => {
+        setState({
+          ...state,
+          hasNextPage: false,
+        });
+      });
+  }, [state]);
 
   const pushTransaction = useCallback(
     (data) => {
@@ -69,20 +91,27 @@ export const useDate = () => {
         ...state,
         transactions: state.transactions.filter((item) => item.id !== id),
       }));
+      deleteItem(id);
     },
     [setState]
   );
 
   const onStartClick = useCallback(
     (id) => {
-      setState((state) => ({
-        ...state,
-        transactions: state.transactions.map((item) =>
-          item.id !== id ? item : { ...item, isChecked: !item.isChecked }
-        ),
-      }));
+      const item = state.transactions.find((item) => item.id === id);
+      updateItem({
+        ...item,
+        isChecked: !item.isChecked,
+      }).then(() => {
+        setState((state) => ({
+          ...state,
+          transactions: state.transactions.map((item) =>
+            item.id !== id ? item : { ...item, isChecked: !item.isChecked }
+          ),
+        }));
+      });
     },
-    [setState]
+    [setState, state]
   );
 
   return {
@@ -90,5 +119,6 @@ export const useDate = () => {
     pushTransaction,
     onDelete,
     onStartClick,
+    loadMoreRows,
   };
 };

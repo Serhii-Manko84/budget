@@ -39,35 +39,39 @@ function open() {
 }
 
 function addItem(item) {
-  const db = html5rocks.indexedDB.db;
-  const trans = db.transaction([DB_NAME], "readwrite");
-  const store = trans.objectStore(DB_NAME);
+  return new Promise((resolve, reject) => {
+    const db = html5rocks.indexedDB.db;
+    const trans = db.transaction([DB_NAME], "readwrite");
+    const store = trans.objectStore(DB_NAME);
 
-  const request = store.put(item);
+    const request = store.put(item);
 
-  request.onsuccess = function (e) {
-    console.log("success");
-  };
+    request.onsuccess = function (e) {
+      resolve();
+    };
 
-  request.onerror = function (e) {
-    console.log("Error Adding: ", e);
-  };
+    request.onerror = function (e) {
+      reject("Error Adding: ", e);
+    };
+  });
 }
 
 function deleteItem(id) {
-  const db = html5rocks.indexedDB.db;
-  const trans = db.transaction([DB_NAME], "readwrite");
-  const store = trans.objectStore(DB_NAME);
+  return new Promise((resolve, reject) => {
+    const db = html5rocks.indexedDB.db;
+    const trans = db.transaction([DB_NAME], "readwrite");
+    const store = trans.objectStore(DB_NAME);
 
-  const request = store.delete(id);
+    const request = store.delete(id);
 
-  request.onsuccess = function (e) {
-    console.log("success");
-  };
+    request.onsuccess = function (e) {
+      resolve();
+    };
 
-  request.onerror = function (e) {
-    console.log("Error Adding: ", e);
-  };
+    request.onerror = function (e) {
+      reject("Error Adding: ", e);
+    };
+  });
 }
 
 function getItems() {
@@ -87,4 +91,35 @@ function getItems() {
   });
 }
 
-export { open, addItem, getItems, deleteItem };
+function getData(start, total) {
+  return new Promise((resolve, reject) => {
+    const db = html5rocks.indexedDB.db;
+    const t = db.transaction([DB_NAME], "readonly");
+    const store = t.objectStore(DB_NAME);
+    const transactions = [];
+    let hasSkippet = false;
+
+    store.openCursor(null, "prev").onsuccess = function (event) {
+      const cursor = event.target.result;
+      if (!hasSkippet && start > 0) {
+        hasSkippet = true;
+        cursor.edvance(start);
+        return;
+      }
+      if (cursor) {
+        transactions.push(cursor.value);
+        if (transactions.length < total) {
+          cursor.continue();
+        } else {
+          resolve(transactions);
+        }
+      } else {
+        resolve(transactions);
+      }
+    };
+  });
+}
+
+const updateItem = (item) => addItem(item);
+
+export { open, addItem, getItems, deleteItem, getData, updateItem };

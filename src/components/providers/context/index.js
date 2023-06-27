@@ -8,6 +8,13 @@ const reducer = (state, action) => {
     case "changeCurrency": {
       return { ...state, currency: action.currency };
     }
+
+    case "setTheme": {
+      return {
+        ...state,
+        themeName: action.themeName,
+      };
+    }
     case "reset": {
       return defaultContent;
     }
