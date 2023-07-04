@@ -1,47 +1,62 @@
+import React, { useState, useEffect } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { Component } from "react";
+import { ThemeProvider } from "styled-components";
 import { Bars } from "react-loader-spinner";
 
 import { open } from "../../utils/indexdb";
 
+import Header from "../Header";
 import Home from "../Home";
 import About from "../About";
-import Statistics from "../Statistics";
 import Settings from "../Settings";
-import Header from "../Header";
+import Statistics from "../Statistics";
 
 import { Wrapper, GlobalStyle } from "./styles";
 
-class App extends Component {
-  constructor(props) {
-    super(props);
+const darkTheme = {
+  body: "#1c1c1c",
+  background: "#4b4343a3",
+  icon: "#b6b6b6",
+  linkColor: "#ffffffcf",
+};
 
-    this.state = {
-      loading: true,
-    };
-  }
+const lightTheme = {
+  body: "#fff",
+  background: "#d7c9c982",
+  icon: "#1c1c1c",
+  linkColor: "#081dba",
+};
 
-  componentDidMount() {
+function App() {
+  const [loading, setLoading] = useState(true);
+  const [theme, setTheme] = useState("dark");
+  const isDarkTheme = theme === "dark";
+
+  const toggleTheme = () => {
+    setTheme(isDarkTheme ? "light" : "dark");
+  };
+
+  useEffect(() => {
     open()
       .then(() => {
-        this.setState({ loading: false });
+        setLoading(false);
       })
       .catch((error) => console.error(error));
-  }
+  }, []);
 
-  render() {
-    if (this.state.loading) {
-      return (
-        <div>
-          <Bars styles="width:50px; height: 50px;" />
-        </div>
-      );
-    }
+  if (loading) {
     return (
-      <BrowserRouter>
+      <div>
+        <Bars styles="width:50px; height: 50px;" />
+      </div>
+    );
+  }
+  return (
+    <BrowserRouter>
+      <GlobalStyle />
+      <ThemeProvider theme={isDarkTheme ? darkTheme : lightTheme}>
         <Wrapper>
-          <GlobalStyle />
-          <Header />
+          <Header toggleTheme={toggleTheme} isDarkTheme={isDarkTheme} />
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/statistics" element={<Statistics />} />
@@ -49,9 +64,9 @@ class App extends Component {
             <Route path="/about" element={<About />} />
           </Routes>
         </Wrapper>
-      </BrowserRouter>
-    );
-  }
+      </ThemeProvider>
+    </BrowserRouter>
+  );
 }
 
 export default App;

@@ -6,15 +6,12 @@ const AppContext = createContext();
 const reducer = (state, action) => {
   switch (action.type) {
     case "changeCurrency": {
-      return { ...state, currency: action.currency };
-    }
-
-    case "setTheme": {
       return {
         ...state,
-        themeName: action.themeName,
+        currency: action.currency,
       };
     }
+
     case "reset": {
       return defaultContent;
     }

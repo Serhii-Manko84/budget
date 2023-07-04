@@ -1,10 +1,11 @@
 import { Link } from "react-router-dom";
-import { ThemeSwitch } from "../ThemeSwitch";
+import Switch from "../Switch";
 import { Nav } from "./styles";
+import { Wrapper } from "./styles";
 
-const Header = () => {
+const Header = ({ toggleTheme, isDarkTheme }) => {
   return (
-    <div>
+    <Wrapper>
       <Nav>
         <ul>
           <li>
@@ -21,9 +22,10 @@ const Header = () => {
           </li>
         </ul>
       </Nav>
-
-      <ThemeSwitch />
-    </div>
+      <div>
+        <Switch toggleTheme={toggleTheme} isDarkTheme={isDarkTheme} />
+      </div>
+    </Wrapper>
   );
 };
 
