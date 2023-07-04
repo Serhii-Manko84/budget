@@ -12,16 +12,16 @@ import Settings from "../Settings";
 import Statistics from "../Statistics";
 
 import { Wrapper, GlobalStyle } from "./styles";
+import { getFormStorage } from "../../utils/sessionStorage";
+import IntlAppProvider from "../providers/context/i18n/provider";
 
 const darkTheme = {
-  body: "#1c1c1c",
   background: "#4b4343a3",
   icon: "#b6b6b6",
   linkColor: "#ffffffcf",
 };
 
 const lightTheme = {
-  body: "#fff",
   background: "#d7c9c982",
   icon: "#1c1c1c",
   linkColor: "#081dba",
@@ -37,6 +37,7 @@ function App() {
   };
 
   useEffect(() => {
+    getFormStorage("name");
     open()
       .then(() => {
         setLoading(false);
@@ -55,15 +56,17 @@ function App() {
     <BrowserRouter>
       <GlobalStyle />
       <ThemeProvider theme={isDarkTheme ? darkTheme : lightTheme}>
-        <Wrapper>
-          <Header toggleTheme={toggleTheme} isDarkTheme={isDarkTheme} />
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/statistics" element={<Statistics />} />
-            <Route path="/settings" element={<Settings />} />
-            <Route path="/about" element={<About />} />
-          </Routes>
-        </Wrapper>
+        <IntlAppProvider>
+          <Wrapper>
+            <Header toggleTheme={toggleTheme} isDarkTheme={isDarkTheme} />
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/statistics" element={<Statistics />} />
+              <Route path="/settings" element={<Settings />} />
+              <Route path="/about" element={<About />} />
+            </Routes>
+          </Wrapper>
+        </IntlAppProvider>
       </ThemeProvider>
     </BrowserRouter>
   );
