@@ -12,7 +12,7 @@ import Settings from "../Settings";
 import Statistics from "../Statistics";
 
 import { Wrapper, GlobalStyle } from "./styles";
-import { getFormStorage } from "../../utils/sessionStorage";
+import { saveToStorage } from "../../utils/sessionStorage";
 import IntlAppProvider from "../providers/context/i18n/provider";
 
 const darkTheme = {
@@ -34,10 +34,10 @@ function App() {
 
   const toggleTheme = () => {
     setTheme(isDarkTheme ? "light" : "dark");
+    saveToStorage("theme", theme);
   };
 
   useEffect(() => {
-    getFormStorage("name");
     open()
       .then(() => {
         setLoading(false);

@@ -1,5 +1,6 @@
 import { useContext } from "react";
 import { IntlProvider } from "react-intl";
+import flatten from "flat";
 import { AppContext } from "../../context";
 
 import messages from "./messages";
@@ -9,7 +10,7 @@ const IntlAppProvider = ({ children }) => {
   const { state } = useContext(AppContext);
   return (
     <IntlProvider
-      messages={messages[state.locale]}
+      messages={flatten(messages[state.locale])}
       locale={state.locale}
       defaultLocale={LOCALES.ENGLISH}
     >

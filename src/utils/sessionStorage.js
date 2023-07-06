@@ -2,7 +2,7 @@ export const saveToStorage = (name, data) => {
   if (!window || !window.localStorage) {
     return;
   }
-  Window.localStorage.setItem(name, JSON.stringify(data));
+  localStorage.setItem(name, JSON.stringify(data));
 };
 
 export const getFormStorage = (name) => {
@@ -10,7 +10,7 @@ export const getFormStorage = (name) => {
     return null;
   }
   try {
-    return JSON.parse(window.localStorage.getItem(name));
+    return JSON.parse(localStorage.getItem(name));
   } catch (error) {
     console.error(error);
 
