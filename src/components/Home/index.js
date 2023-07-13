@@ -3,13 +3,14 @@ import { Bars } from "react-loader-spinner";
 
 import Balance from "../Balance";
 import Transactions from "../Transactions";
-import Form from "../Form";
+
 import ErrorBoundary from "../ErrorBoundary";
 
 import { Wrapper } from "./styles";
 
 import { useDate } from "../hooks";
 import { STATUSESS } from "../../constants";
+import { ChangeBalance } from "../ChangeBalance";
 
 const Home = () => {
   const [balance, setBalance] = useState(0);
@@ -25,7 +26,7 @@ const Home = () => {
     <ErrorBoundary>
       <Wrapper>
         <Balance balance={balance} />
-        <Form onChange={onChange} />
+        <ChangeBalance onChange={onChange} />
         <hr />
         {status === STATUSESS.PENDING ? (
           <div>

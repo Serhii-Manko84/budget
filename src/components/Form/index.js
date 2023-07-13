@@ -14,6 +14,7 @@ const Form = (props) => {
     event.preventDefault();
     props.onChange(form);
     setForm({ ...form, value: "", comment: "" });
+    props.onCloseFormModal();
   };
 
   const onChange = (event) => {
