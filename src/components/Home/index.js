@@ -1,4 +1,4 @@
-// import { useState } from "react";
+import { useState } from "react";
 import { Bars } from "react-loader-spinner";
 
 import Balance from "../Balance";
@@ -11,23 +11,21 @@ import { Wrapper } from "./styles";
 import { useDate } from "../hooks";
 import { STATUSESS } from "../../constants";
 import { ChangeBalance } from "../ChangeBalance";
-import { BalanceData } from "../BalanceData";
 
 const Home = () => {
-  // const [balance, setBalance] = useState(0);
   const { transactions, status, pushTransaction, onDelete, onStartClick } =
     useDate();
+  const [balance, setBalance] = useState(0);
 
   const onChange = (transaction) => {
     pushTransaction(transaction);
-    // setBalance(balance + Number(transaction.value));
+    setBalance(balance + Number(transaction.value));
   };
 
   return (
     <ErrorBoundary>
       <Wrapper>
-        <BalanceData>{(balance) => <Balance balance={balance} />}</BalanceData>
-
+        <Balance balance={balance} />
         <ChangeBalance onChange={onChange} />
         <hr />
         {status === STATUSESS.PENDING ? (

@@ -8,25 +8,15 @@ import { open } from "../../utils/indexdb";
 import Header from "../Header";
 import Home from "../Home";
 import About from "../About";
-import Statistics from "../Statistics";
 
 import { Wrapper, GlobalStyle } from "./styles";
 import { saveToStorage } from "../../utils/sessionStorage";
 import IntlAppProvider from "../providers/context/i18n/provider";
+import { darkTheme } from "../theme/dark";
+import { lightTheme } from "../theme/light";
 
 const Settings = lazy(() => import("../Settings"));
-
-const darkTheme = {
-  background: "#4b4343a3",
-  icon: "#b6b6b6",
-  linkColor: "#ffffffcf",
-};
-
-const lightTheme = {
-  background: "#d7c9c982",
-  icon: "#1c1c1c",
-  linkColor: "#081dba",
-};
+const Statistics = lazy(() => import("../Statistics"));
 
 function App() {
   const [loading, setLoading] = useState(true);
