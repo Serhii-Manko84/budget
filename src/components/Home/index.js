@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Bars } from "react-loader-spinner";
 
 import Balance from "../Balance";
@@ -13,9 +13,14 @@ import { STATUSESS } from "../../constants";
 import { ChangeBalance } from "../ChangeBalance";
 
 const Home = () => {
+  const initialBalance = parseFloat(localStorage.getItem("balance")) || 0;
+  const [balance, setBalance] = useState(initialBalance);
   const { transactions, status, pushTransaction, onDelete, onStartClick } =
     useDate();
-  const [balance, setBalance] = useState(0);
+
+  useEffect(() => {
+    localStorage.setItem("balance", balance.toString());
+  }, [balance]);
 
   const onChange = (transaction) => {
     pushTransaction(transaction);
